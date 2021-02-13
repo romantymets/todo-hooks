@@ -1,22 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import List from "./component/List/List";
 import Api from "../../api/Api";
+import Spiner from "../../components/Spiner/Spiner";
+
 
 function TodoContainer() {
   const [InputText, setInputText] = useState("");
   const [todo, setTodo] = useState([]);
+  const [downloadTodoFromServer, setDownloadTodoFromServer] = useState(false);
+  const [addTodoToTheServer, setaddTodoToTheServer] = useState(false);
+  const inputRef = useRef(null);
 
   const onAddTodo = (e) => {
     e.preventDefault();
     const inputText = InputText;
     const newTodo = todo;
+    setaddTodoToTheServer(true);
     Api.post("/todo", {
-      title: inputText
+      title: inputText,
     }
       )
       .then((response) => {
         const { data } = response;
-        setTodo([...newTodo, data])
+        setTodo([...newTodo, data]);
+        setaddTodoToTheServer(false);
+        setInputText("");
+        inputRef.current.value = "";
+        inputRef.current.focus();
       })
       .catch((error) => {
         alert(error.message)
@@ -26,16 +36,21 @@ function TodoContainer() {
   const inputtext = e.target.value;
   setInputText( inputtext )
   }
+
   useEffect(() => {
+    // download todos from server
+    setDownloadTodoFromServer(true);
     Api.get("/todo")
       .then((response) => {
         const { data } = response;
-        setTodo( data )
+        setTodo( data );
+        setDownloadTodoFromServer(false)
       })
       .catch((error) => {
         alert(error.message)
       })
   }, []);
+
   const deleteTodo = (_id) => {
     const findIndexElement = todo.findIndex(todo => todo._id === _id);
     Api.remove(`/todo/${_id}`)
@@ -49,21 +64,49 @@ function TodoContainer() {
       })
   };
 
+  const onItemCheck = (_id) => (e) => {
+   const checked =  e.target.checked;
+   Api.patch(`/todo/${_id}`,{ completed: checked })
+    .then(() => {
+      const currentTodo = todo.find(todo => todo._id ===_id);
+      currentTodo.completed = checked;
+      const newTodo = todo.map(todo => todo._id === _id ? currentTodo : todo);
+      setTodo(newTodo)
+    })
+    .catch((error) => {
+      alert(error.message)
+    })
+};
+  const countTodoChecked = () => {
+    const checkedTodo = todo.filter(todo => todo.completed === true);
+    return checkedTodo.length
+  };
+
   return (
     <div className='container'>
       <form className='container' onSubmit={onAddTodo}>
         <div className="form-group">
           <h2> Enter Todo </h2>
-          <input type="text" className="form-control"
-                 placeholder="Enter text" onChange={onInput} />
+          <input type="text" className="form-control" placeholder="Enter text"
+                 onChange={onInput} ref={inputRef} required/>
                  <br/>
-        <button type="submit" className="btn btn-primary"> Submit </button>
+        <button type="submit" className="btn btn-primary"
+                disabled={addTodoToTheServer}>
+          {addTodoToTheServer ? <Spiner/> :"Submit"}
+
+        </button>
         </div>
       </form>
+      {downloadTodoFromServer ? <Spiner/> : null}
       <List
         todos = {todo}
         deleteTodo={deleteTodo}
+        onItemCheck ={onItemCheck}
       />
+      <footer>
+        <p> All todo : {todo.length}</p>
+        <p> Checked todo {countTodoChecked()}</p>
+      </footer>
     </div>
   );
 }
