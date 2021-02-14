@@ -11,6 +11,7 @@ function TodoContainer() {
   const [downloadTodoFromServer, setDownloadTodoFromServer] = useState(false);
   const [addTodoToTheServer, setaddTodoToTheServer] = useState(false);
   const inputRef = useRef(null);
+  const showTodo = 4;
 
   const onAddTodo = (e) => {
     e.preventDefault();
@@ -42,7 +43,7 @@ function TodoContainer() {
   useEffect(() => {
     // download todos from server
     setDownloadTodoFromServer(true);
-    Api.get("/todo")
+    Api.get(`/todo?limit=${showTodo}`)
       .then((response) => {
         const { data } = response;
         setTodo(data);
@@ -85,6 +86,17 @@ function TodoContainer() {
     return checkedTodo.length
   };
 
+  const loadMore = () => {
+    Api.get(`/todo?limit=${showTodo}&skip=${todo.length}`)
+      .then((response) => {
+        const { data } = response;
+        setTodo([...todo ,...data])
+      })
+      .catch((error) => {
+        alert(error.message)
+      })
+  };
+
   return (
     <div className='container'>
       <form className='container' onSubmit={onAddTodo}>
@@ -100,6 +112,10 @@ function TodoContainer() {
           </button>
         </div>
       </form>
+      <button type="submit" className="btn btn-primary" onClick={loadMore}>
+        Load more
+        {/*{addTodoToTheServer ? <Spiner/> : "Submit"}*/}
+      </button>
       {downloadTodoFromServer ? <Spiner/> : null}
       <List
         todos={todo}

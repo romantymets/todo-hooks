@@ -22,10 +22,10 @@ function App() {
           <Route path="/about">
             <AboutPage />
           </Route>
-          <Route path="/todoitem">
+          <Route path="/todoitem:_id">
             <TodoItemPage />
           </Route>
-          <Route path="/">
+          <Route  exact path="/">
             <HomePage />
           </Route>
         </Switch>
