@@ -4,7 +4,7 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
-import NawBar from "./NawBar/NawBar";
+import NavBar from "./NavBar/NavBar";
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AboutPage from "./pages/AboutPage/AboutPage";
@@ -17,7 +17,7 @@ function App() {
   return (
     <div className="container">
       <Router>
-      <NawBar/>
+      <NavBar/>
         <Switch>
           <Route path="/about">
             <AboutPage />

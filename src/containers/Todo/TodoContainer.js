@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import List from "./component/List/List";
 import Api from "../../api/Api";
 import Spiner from "../../components/Spiner/Spiner";
 
 
 function TodoContainer() {
+
   const [InputText, setInputText] = useState("");
   const [todo, setTodo] = useState([]);
   const [downloadTodoFromServer, setDownloadTodoFromServer] = useState(false);
@@ -17,9 +18,9 @@ function TodoContainer() {
     const newTodo = todo;
     setaddTodoToTheServer(true);
     Api.post("/todo", {
-      title: inputText,
-    }
-      )
+        title: inputText,
+      }
+    )
       .then((response) => {
         const { data } = response;
         setTodo([...newTodo, data]);
@@ -31,10 +32,11 @@ function TodoContainer() {
       .catch((error) => {
         alert(error.message)
       })
-  } ;
-  function onInput (e) {
-  const inputtext = e.target.value;
-  setInputText( inputtext )
+  };
+
+  function onInput(e) {
+    const inputtext = e.target.value;
+    setInputText(inputtext)
   }
 
   useEffect(() => {
@@ -43,7 +45,7 @@ function TodoContainer() {
     Api.get("/todo")
       .then((response) => {
         const { data } = response;
-        setTodo( data );
+        setTodo(data);
         setDownloadTodoFromServer(false)
       })
       .catch((error) => {
@@ -56,7 +58,7 @@ function TodoContainer() {
     Api.remove(`/todo/${_id}`)
       .then(() => {
         const newTodo = [...todo];
-        newTodo.splice(findIndexElement,1);
+        newTodo.splice(findIndexElement, 1);
         setTodo(newTodo)
       })
       .catch((error) => {
@@ -65,18 +67,19 @@ function TodoContainer() {
   };
 
   const onItemCheck = (_id) => (e) => {
-   const checked =  e.target.checked;
-   Api.patch(`/todo/${_id}`,{ completed: checked })
-    .then(() => {
-      const currentTodo = todo.find(todo => todo._id ===_id);
-      currentTodo.completed = checked;
-      const newTodo = todo.map(todo => todo._id === _id ? currentTodo : todo);
-      setTodo(newTodo)
-    })
-    .catch((error) => {
-      alert(error.message)
-    })
-};
+    const checked = e.target.checked;
+    Api.patch(`/todo/${_id}`, { completed: checked })
+      .then(() => {
+        const currentTodo = todo.find(todo => todo._id === _id);
+        currentTodo.completed = checked;
+        const newTodo = todo.map(todo => todo._id === _id ? currentTodo : todo);
+        setTodo(newTodo)
+      })
+      .catch((error) => {
+        alert(error.message)
+      })
+  };
+
   const countTodoChecked = () => {
     const checkedTodo = todo.filter(todo => todo.completed === true);
     return checkedTodo.length
@@ -89,19 +92,19 @@ function TodoContainer() {
           <h2> Enter Todo </h2>
           <input type="text" className="form-control" placeholder="Enter text"
                  onChange={onInput} ref={inputRef} required/>
-                 <br/>
-        <button type="submit" className="btn btn-primary"
-                disabled={addTodoToTheServer}>
-          {addTodoToTheServer ? <Spiner/> :"Submit"}
+          <br/>
+          <button type="submit" className="btn btn-primary"
+                  disabled={addTodoToTheServer}>
+            {addTodoToTheServer ? <Spiner/> : "Submit"}
 
-        </button>
+          </button>
         </div>
       </form>
       {downloadTodoFromServer ? <Spiner/> : null}
       <List
-        todos = {todo}
+        todos={todo}
         deleteTodo={deleteTodo}
-        onItemCheck ={onItemCheck}
+        onItemCheck={onItemCheck}
       />
       <footer>
         <p> All todo : {todo.length}</p>
