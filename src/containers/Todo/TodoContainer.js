@@ -1,8 +1,9 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import List from "./component/List/List";
 import Api from "../../api/Api";
 import Spiner from "../../components/Spiner/Spiner";
 
+const showTodo = 4;
 
 function TodoContainer() {
 
@@ -11,7 +12,6 @@ function TodoContainer() {
   const [downloadTodoFromServer, setDownloadTodoFromServer] = useState(false);
   const [addTodoToTheServer, setaddTodoToTheServer] = useState(false);
   const inputRef = useRef(null);
-  const showTodo = 4;
 
   const onAddTodo = (e) => {
     e.preventDefault();

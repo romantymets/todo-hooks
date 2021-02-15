@@ -20,12 +20,18 @@ function List({ todos, deleteTodo, onItemCheck }) {
             <div className="container">
               <div className={classNames("row", `${todo.completed ? style.doneTodo : null}`)}>
                 <div className="col-1">
-                  <input type="checkbox" checked={todo.completed} onChange={onItemCheck(todo._id)}/>
+                  <input
+                    type="checkbox"
+                    checked={todo.completed}
+                    onChange={onItemCheck(todo._id)}
+                    onClick={(e) => {e.stopPropagation()}}
+                  />
                 </div>
                 <div className="col-1"> {index + 1}</div>
                 <div className="col-9"> {todo.title}</div>
                 <div className="col-1">
-                  <button className="btn-danger" onClick={() => {
+                  <button className="btn-danger" onClick={(e) => {
+                    e.stopPropagation();
                     deleteTodo(todo._id)
                   }}> X
                   </button>

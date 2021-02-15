@@ -1,26 +1,13 @@
 import {useEffect, useRef, useState} from 'react';
 import {Link} from "react-router-dom";
+import useOutsideClick from "../hooks/useOutsideClick";
 
 
 function NavBar() {
   const wrapperRef = useRef(null);
   const [showBar, setShowBar] = useState(false);
 
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setShowBar(false)
-      }
-    }
-
-    // Bind the event listener
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      // Unbind the event listener on clean up
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [wrapperRef]);
+  useOutsideClick(wrapperRef, () => setShowBar(false));
 
   const onButtonClick = () => {
     setShowBar(!showBar)
