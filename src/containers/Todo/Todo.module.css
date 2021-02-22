@@ -1,0 +1,20 @@
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.buttonSubmit {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.buttonLoadMore {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}

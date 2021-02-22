@@ -1,0 +1,15 @@
+.nav-item{
+    text-transform: uppercase;
+    margin-left: 50px;
+}
+
+.nav-item:hover {
+   background-color: #ebecf0;
+    transform: translate(10px);
+    transition-duration: 0.5s;
+    border-radius: 5px;
+}
+.image{
+    font-size: 120%;
+}
+

@@ -13,7 +13,7 @@ function TodoItemPage() {
   useEffect(() => {
     Api.get(`/todo/${_id}`)
       .then((response) => {
-        const { data } = response;
+        const { data } = response
         setTodo(data);
       })
       .catch((error) => {
@@ -30,7 +30,7 @@ function TodoItemPage() {
           TODO
         </div>
         <div className="card-body">
-          <h5 className="card-title">{getTodo.title}</h5>
+          <h5 className="card-title">{getTodo ? getTodo.title : ""}</h5>
           <button type="submit" className="btn btn-primary" onClick={goBack}>
             Go back
           </button>

@@ -16,16 +16,26 @@ function List({ todos, deleteTodo, onItemCheck }) {
     <ul className="list-group list-group-flush">
       {todos.map(
         (todo, index) => (
-          <li className="list-group-item" key={todo._id} onClick={onItemClick(todo)}>
-            <div className="container">
-              <div className={classNames("row", `${todo.completed ? style.doneTodo : null}`)}>
+          <li className={classNames(style.listItem, `${todo.completed ? style.doneTodo : null}`)} key={todo._id}
+              onClick={onItemClick(todo)}>
+            <div className={classNames("container")}>
+              <div className="row">
                 <div className="col-1">
-                  <input type="checkbox" checked={todo.completed} onChange={onItemCheck(todo._id)}/>
+                  <input
+                    className={style.checkboxContainer}
+                    type="checkbox"
+                    checked={todo.completed}
+                    onChange={onItemCheck(todo._id)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                    }}
+                  />
                 </div>
                 <div className="col-1"> {index + 1}</div>
                 <div className="col-9"> {todo.title}</div>
                 <div className="col-1">
-                  <button className="btn-danger" onClick={() => {
+                  <button className={classNames("btn-danger", style.button)} onClick={(e) => {
+                    e.stopPropagation();
                     deleteTodo(todo._id)
                   }}> X
                   </button>

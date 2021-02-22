@@ -2,7 +2,10 @@ import React, {useState, useEffect, useRef} from 'react';
 import List from "./component/List/List";
 import Api from "../../api/Api";
 import Spiner from "../../components/Spiner/Spiner";
+import classNames from "classnames";
+import style from "./Todo.module.css"
 
+const showTodo = 4;
 
 function TodoContainer() {
 
@@ -11,7 +14,6 @@ function TodoContainer() {
   const [downloadTodoFromServer, setDownloadTodoFromServer] = useState(false);
   const [addTodoToTheServer, setaddTodoToTheServer] = useState(false);
   const inputRef = useRef(null);
-  const showTodo = 4;
 
   const onAddTodo = (e) => {
     e.preventDefault();
@@ -90,7 +92,7 @@ function TodoContainer() {
     Api.get(`/todo?limit=${showTodo}&skip=${todo.length}`)
       .then((response) => {
         const { data } = response;
-        setTodo([...todo ,...data])
+        setTodo([...todo, ...data])
       })
       .catch((error) => {
         alert(error.message)
@@ -99,23 +101,26 @@ function TodoContainer() {
 
   return (
     <div className='container'>
+      <div className={style.buttonLoadMore}>
+        <h2> My TODO List </h2>
+      </div>
       <form className='container' onSubmit={onAddTodo}>
-        <div className="form-group">
-          <h2> Enter Todo </h2>
-          <input type="text" className="form-control" placeholder="Enter text"
+        <div className={classNames("form-group", style.formContainer)}>
+          <input type="text" className="form-control" placeholder="Please enter your todo"
                  onChange={onInput} ref={inputRef} required/>
           <br/>
-          <button type="submit" className="btn btn-primary"
+          <button type="submit" className={classNames("btn btn-primary", style.buttonSubmit)}
                   disabled={addTodoToTheServer}>
             {addTodoToTheServer ? <Spiner/> : "Submit"}
 
           </button>
         </div>
       </form>
-      <button type="submit" className="btn btn-primary" onClick={loadMore}>
-        Load more
-        {/*{addTodoToTheServer ? <Spiner/> : "Submit"}*/}
-      </button>
+      <div className={style.buttonLoadMore}>
+        <button type="submit" className="btn btn-primary" onClick={loadMore}>
+          Load more
+        </button>
+      </div>
       {downloadTodoFromServer ? <Spiner/> : null}
       <List
         todos={todo}
